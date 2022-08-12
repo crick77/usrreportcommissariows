@@ -265,13 +265,13 @@ public class ReportCommissarioService implements MessageListener {
             }
             log("Contributi loaded: "+contributi.size()+" unique records found.");
             
-            String anticipazioneSal0FinaleSql = "SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'ANTIC' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (15) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1 "
+            String anticipazioneSal0FinaleSql = "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'ANTIC' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (15) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) "
                     + "UNION "
-                    + "SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'SAL0' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,3,4,37,38,39) AND id_tipo_decreto IN (21) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1 "
+                    + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'SAL0' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,3,4,37,38,39) AND id_tipo_decreto IN (21) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) "
                     + "UNION "
-                    + "select data_ora_provvedimento, numero_provvedimento, importo_contributo, 'FINALE' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (3,4,38,39) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1 " 
+                    + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'FINALE' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,3,4,37,38,39) AND id_tipo_decreto IN (19) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) " 
                     + "UNION "
-                    + "select data_ora_provvedimento, numero_provvedimento, importo_contributo, 'LIEVI50' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1";
+                    + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'LIEVI50' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1)";
             String dataPresentazioneSql =   "SELECT * FROM (" +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'FINALE' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI130', 'SPE00CI156', 'SPE00CI172') ORDER BY im.IstanzaMudeData" +
                     "  UNION ALL " +
@@ -283,18 +283,22 @@ public class ReportCommissarioService implements MessageListener {
                     "  UNION ALL " +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'SAL50' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI128') ORDER BY im.IstanzaMudeData" +
                     ") AS t";
+            String dataProvvedimentiSql = "SELECT data_ora_provvedimento, numero_provvedimento FROM decreti WHERE id_ordinanza_riferimento in (3,4,38,39) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ? ORDER BY data_ora_provvedimento DESC";
+            String dataProvvedimento50Sql = "SELECT data_ora_provvedimento, numero_provvedimento from decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ?";
             String reportCommissarioSql = "INSERT INTO reportcommissario (numerofascicolomude, ordinanza, ordinanza100, sorteggiatoperverificaacampione, numeroprotocollousr, dataprotocollousr, numerofascicolousr, cfintestatario, nomecognomeintestatario, titolaritagiuridicarichiedente, cfprofessionistacapogruppo, "
                     + "nomecognomeprofessionistacapogruppo, cfopivaimpresaaffidataria, ragionesocialeimpresaaffidataria, codiceistatprovincia, codiceistatcomune, indirizzo, foglio, mappaleterreni, destinazioneusoprevalente, livellooperativo, tipologiaintervento, interventoaggregato, totustrutturali, "
                     + "totui, totuiprincipalioattprodese, istanzarigettataarchiviata, datarigettoarchiviazione, numerodecretocontributo, datadecretocontributo, cup, datapresentazioneanticipazionespesetecniche, numerodecretoanticipazionespesetecniche, datadecretoanticipazionespesetecniche, "
                     + "importoanticipazionespesetecniche, datapresentazionesal0, numerodecretosal0, datadecretosal0, datapresentazionesal20, numerodecretosal20, datadecretosal20, datapresentazionesal40, numerodecretosal40, datadecretosal40, datapresentazionesal50, numerodecretosal50, datadecretosal50, "
                     + "datapresentazionesal70, numerodecretosal70, datadecretosal70, datapresentazionesalfinale, numerodecretosalfinale, datadecretosalfinale, contributoconcesso, contributoliquidato) "
-                    + "VALUES "
+                    + "VALUES " 
                     + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String reportoCommissarioWorkSql = "UPDATE reportcommissariowork SET step = ?, completed = ?, error = ? WHERE (id = 1)";
             try(PreparedStatement psAnticipazioneSal0Finale = decretiCon.prepareStatement(anticipazioneSal0FinaleSql);
                     PreparedStatement psDataPresentazione = pigrecoCon.prepareStatement(dataPresentazioneSql);
                     PreparedStatement psReportCommissario = decretiCon.prepareStatement(reportCommissarioSql);
-                    PreparedStatement psReportCommissarioWork = decretiCon.prepareStatement(reportoCommissarioWorkSql)) {
+                    PreparedStatement psReportCommissarioWork = decretiCon.prepareStatement(reportoCommissarioWorkSql);
+                    PreparedStatement psDataProvvedimenti = decretiCon.prepareStatement(dataProvvedimentiSql);
+                    PreparedStatement psDataProvvedimento50 = decretiCon.prepareStatement(dataProvvedimento50Sql)) {
                 
                 int rowCount = 0;
                 for(Report r : lRep) {
@@ -379,7 +383,46 @@ public class ReportCommissarioService implements MessageListener {
                                     }
                                 }                                
                             }
-                        }                        
+                        }
+
+                        // Carica date provvvedimenti SAL 20,40 e 70
+                        psDataProvvedimenti.clearParameters();
+                        psDataProvvedimenti.setInt(1, idPratica);
+                        try(ResultSet rs = psDataProvvedimenti.executeQuery()) {
+                            int num = 1;
+                            while(rs.next()) {
+                                switch(num) {
+                                    case 3: {
+                                        r.setDataDecretoSAL70(rs.getDate("data_ora_provvedimento"));
+                                        r.setNumeroDecretoSAL70(rs.getString("numero_provvedimento"));
+                                        num++;
+                                        break;
+                                    }
+                                    case 2: {
+                                        r.setDataDecretoSAL40(rs.getDate("data_ora_provvedimento"));
+                                        r.setNumeroDecretoSAL40(rs.getString("numero_provvedimento"));
+                                        num++;
+                                        break;
+                                    }
+                                    case 1: {
+                                        r.setDataDecretoSAL20(rs.getDate("data_ora_provvedimento"));
+                                        r.setNumeroDecretoSAL20(rs.getString("numero_provvedimento"));
+                                        num++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        psDataProvvedimento50.clearParameters();
+                        psDataProvvedimento50.setInt(1, idPratica);
+                        try(ResultSet rs = psDataProvvedimento50.executeQuery()) {
+                            if(rs.next()) {
+                                r.setDataDecretoSAL50(rs.getDate("data_ora_provvedimento"));
+                                r.setNumeroDecretoSAL0(rs.getString("numero_provvedimento"));
+                            }
+                            
+                        }
                     }
                     else {                        
                         log("WARNING! IdPratica: "+idPratica+" not found in decreti!");
