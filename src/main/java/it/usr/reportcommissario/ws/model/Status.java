@@ -5,8 +5,7 @@
  */
 package it.usr.reportcommissario.ws.model;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.json.bind.annotation.JsonbNillable;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,7 +20,7 @@ public class Status {
     private int current;
     private int total;
     @JsonbDateFormat("dd/MM/yyyy HH:mm:ss")
-    private Timestamp dt;
+    private LocalDateTime dt;
     private boolean completed;
     private String error;
 
@@ -49,11 +48,11 @@ public class Status {
         this.total = total;
     }        
 
-    public Date getDt() {
+    public LocalDateTime getDt() {
         return dt;
     }
 
-    public void setDt(Timestamp dt) {
+    public void setDt(LocalDateTime dt) {
         this.dt = dt;
     }
 

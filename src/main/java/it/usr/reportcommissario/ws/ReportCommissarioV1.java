@@ -125,7 +125,7 @@ public class ReportCommissarioV1 {
                         Status s = new Status();
                         s.setCurrent(rsCheck.getInt(1));
                         s.setTotal(rsCheck.getInt(2));
-                        s.setDt(rsCheck.getTimestamp(3));
+                        s.setDt(rsCheck.getTimestamp(3).toLocalDateTime());
                         s.setCompleted(rsCheck.getInt(4) == 1);
                         s.setError(rsCheck.getString(5));
                                                 

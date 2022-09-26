@@ -9,7 +9,6 @@ import it.usr.reportcommissario.ws.helper.ReflectiveSetterHelper;
 import it.usr.reportcommissario.ws.model.Contributo;
 import it.usr.reportcommissario.ws.model.Decreto;
 import it.usr.reportcommissario.ws.model.Report;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
