@@ -15,8 +15,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -57,7 +59,7 @@ public class ReportCommissarioV1 {
     
     @GET
     @Path(value = "generate")
-    @Consumes(value = MediaType.WILDCARD)
+    @Consumes(value = MediaType.WILDCARD)    
     public Response generateReportData() {
         Status s = getStatus();
                         
@@ -263,5 +265,11 @@ public class ReportCommissarioV1 {
         } catch (SQLException sqle) {
             throw sqle;
         }        
+    } 
+    
+    @Schedule(hour = "2", minute = "0", dayOfWeek = "*", persistent = false)
+    public void automaticGeneration() {
+        System.out.println("Automatic generation on "+new Date());
+        generateReportData();
     }
 }
