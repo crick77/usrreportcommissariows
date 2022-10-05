@@ -175,7 +175,7 @@ public class Report {
     private String numeroDecretoSAL20;
     
     @CsvBindByPosition(position = 40)
-    @JsonbDateFormat("dd/MM/yyyy")    
+    @JsonbDateFormat("yyyy/MM/dd")    
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSAL20;
     
@@ -206,7 +206,7 @@ public class Report {
     private Date dataDecretoSAL50;
     
     @CsvBindByPosition(position = 47)
-    @JsonbDateFormat("dd/MM/yyyy")    
+    @JsonbDateFormat("yyyy/MM/dd")    
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSAL70;
     
