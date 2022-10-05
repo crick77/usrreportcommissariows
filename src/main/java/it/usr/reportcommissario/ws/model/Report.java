@@ -46,7 +46,7 @@ public class Report {
     private String numeroProtocolloUSR;
     
     @CsvBindByPosition(position = 5)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataProtocolloUSR;
     
@@ -121,7 +121,7 @@ public class Report {
     private Boolean istanzaRigettataArchiviata;
     
     @CsvBindByPosition(position = 27)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataRigettoArchiviazione;
     
@@ -129,7 +129,7 @@ public class Report {
     private String numeroDecretoContributo;
     
     @CsvBindByPosition(position = 29)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date  dataDecretoContributo;
     
@@ -137,7 +137,7 @@ public class Report {
     private String CUP;
     
     @CsvBindByPosition(position = 31)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneAnticipazioneSpeseTecniche;
     
@@ -145,7 +145,7 @@ public class Report {
     private String numeroDecretoAnticipazioneSpeseTecniche;
     
     @CsvBindByPosition(position = 33)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoAnticipazioneSpeseTecniche;    
     
@@ -154,7 +154,7 @@ public class Report {
     private BigDecimal importoAnticipazioneSpeseTecniche;
     
     @CsvBindByPosition(position = 35)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSAL0;
     
@@ -162,12 +162,12 @@ public class Report {
     private String numeroDecretoSAL0;
     
     @CsvBindByPosition(position = 37)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSAL0;
     
     @CsvBindByPosition(position = 38)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSAL20;
     
@@ -180,7 +180,7 @@ public class Report {
     private Date dataDecretoSAL20;
     
     @CsvBindByPosition(position = 41)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSAL40;
     
@@ -188,12 +188,12 @@ public class Report {
     private String numeroDecretoSAL40;
     
     @CsvBindByPosition(position = 43)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSAL40;
     
     @CsvBindByPosition(position = 44)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSAL50;
     
@@ -201,7 +201,7 @@ public class Report {
     private String numeroDecretoSAL50;
     
     @CsvBindByPosition(position = 46)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSAL50;
     
@@ -214,12 +214,12 @@ public class Report {
     private String numeroDecretoSAL70;
     
     @CsvBindByPosition(position = 49)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSAL70;
     
     @CsvBindByPosition(position = 50)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataPresentazioneSALfinale;
     
@@ -227,7 +227,7 @@ public class Report {
     private String numeroDecretoSALfinale;
     
     @CsvBindByPosition(position = 52)
-    @JsonbDateFormat("dd/MM/yyyy")
+    @JsonbDateFormat("yyyy/MM/dd")
     @CsvDate("dd/MM/yyyy")
     private Date dataDecretoSALfinale;
         

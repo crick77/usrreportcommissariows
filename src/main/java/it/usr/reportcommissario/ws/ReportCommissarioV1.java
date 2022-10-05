@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -171,7 +172,8 @@ public class ReportCommissarioV1 {
             String out = sw.toString();
             out = out.replaceAll("true", "SI").replaceAll("false", "NO");
             out = HEADER_FIELDS+"\n"+out;
-            String fileName = "RP_ABR_"+new SimpleDateFormat("dd_MM_yyyy").format(s.getDt())+".csv";
+            Date d = Date.from(s.getDt().atZone(ZoneId.systemDefault()).toInstant());
+            String fileName = "RP_ABR_"+new SimpleDateFormat("dd_MM_yyyy").format(d)+".csv";
             return Response.ok(out).header("Content-Disposition", "attachment; filename=\"" + fileName + "\"").build();
         } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex).build();
