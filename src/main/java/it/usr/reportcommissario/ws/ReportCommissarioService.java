@@ -133,8 +133,8 @@ public class ReportCommissarioService implements MessageListener {
                     "    cbo_LivelliOperativi lo ON lo.idLivelloOperativo = ist.IdLivelloOperativo " +
                     "WHERE " +
                     "	im.IDPratica > 0 " +
-                    "AND " +
-                    "	(im.IstanzaMUDEDiriferimento IS NULL OR im.IstanzaMUDEDiriferimento = '') " +
+                   // "AND " +
+                   // "	(im.IstanzaMUDEDiriferimento IS NULL OR im.IstanzaMUDEDiriferimento = '') " +
                     "AND " +
                     "	it.Sequenza = 'Prima' " +
                     "ORDER BY " +
@@ -272,7 +272,7 @@ public class ReportCommissarioService implements MessageListener {
                     + "UNION "
                     + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'LIEVI50' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1)";
             String dataPresentazioneSql =   "SELECT * FROM (" +
-                    "    SELECT TOP 1 im.IstanzaMudeData, 'FINALE' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI130', 'SPE00CI156', 'SPE00CI172') ORDER BY im.IstanzaMudeData" +
+                    "    SELECT TOP 1 im.IstanzaMudeData, 'FINALE' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI129', 'SPE00CI130', 'SPE00CI155', 'SPE00CI156', 'SPE00CI171', 'SPE00CI172') ORDER BY im.IstanzaMudeData" +
                     "  UNION ALL " +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'SAL70' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI154', 'SPE00CI170') ORDER BY im.IstanzaMudeData" +
                     "  UNION ALL " +
