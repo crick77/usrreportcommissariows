@@ -93,52 +93,52 @@ public class ReportCommissarioService implements MessageListener {
                 return;
             }*/
                                    
-            String sql =   "SELECT " +
-                    "	im.IstanzaMudeNr AS NumeroFascicoloMUDE, " +
-                    "	it.Ordinanza AS Ordinanza, " +
-                    "	imp.Numeroprotocollo AS NumeroProtocolloUSR, " +
-                    "	imp.dataProtocollo AS DataProtocolloUSR, " +
-                    "	im.IDPratica AS NumeroFascicoloUSR, " +
-                    "	ist.IntestatarioCF AS CFIntestatario, " +
-                    "	im.IntestatarioNomeCognome AS NomeCognomeIntestatario, " +
-                    "	ist.ProfessionistaCF AS CFProfessionistaCapogruppo, " +
-                    "	im.Professionista AS NomeCognomeProfessionistaCapogruppo, " +
-                    "	CASE com.Provincia " +
-                    "		WHEN 'AQ' THEN '066' " +
-                    "		WHEN 'CH' THEN '069' " +
-                    "		WHEN 'PE' THEN '068' " +
-                    "		ELSE '067' " +
-                    "	END AS CodiceIstatProvincia, " +
-                    "	com.Istat AS CodiceIstatComune, " +
-                    "	ist.UbicazioneEdificio AS Indirizzo, " +
-                    "	ist.Foglio AS Foglio, " +
-                    "	ist.Mappale AS MappaleTerreni, " +
-                    "	it.DestinazioneUso AS DestinazioneUsoPrevalente, " +
-                    "	lo.LivelloOperativo AS LivelloOperativo, " +
-                    "	ist.NumeroUnitaImmobiliare AS TotUI, " +
-                    "	ist.NumeroAbitazioniPrincipali AS TotUIPrincipaliOAttProdEse " +
-                    "FROM " +
-                    "	tbl_IstanzaMUDE im " +
-                    "JOIN " +
-                    "	(SELECT _im.IDPratica, MIN(_im.IstanzaMudeData) AS IstanzaMudeData FROM tbl_IstanzaMUDE _im GROUP BY _im.IDPratica) AS im2 ON (im.IDPratica = im2.IDPratica) AND (im.IstanzaMudeData = im2.IstanzaMudeData) " +
-                    "JOIN " +
-                    "	tbl_IstanzaMUDEProtocolli imp ON im.IstanzaMudeNr = imp.IDIstanzaMUDE " +
-                    "JOIN " +
-                    "	cbo_IstanzaTipologia it ON im.SpeciePratica = it.IdSpeciePraticaIdSpeciePratica " +
-                    "JOIN " +
-                    "	MDMComuni com ON UPPER(im.IstanzaComune) = UPPER(com.Nome) " +
-                    "JOIN " +
-                    "    tbl_Istanza ist ON im.IstanzaMudeNr = ist.IstanzaMudeNr " +
-                    "LEFT JOIN " +
-                    "    cbo_LivelliOperativi lo ON lo.idLivelloOperativo = ist.IdLivelloOperativo " +
-                    "WHERE " +
-                    "	im.IDPratica > 0 " +
-                   // "AND " +
-                   // "	(im.IstanzaMUDEDiriferimento IS NULL OR im.IstanzaMUDEDiriferimento = '') " +
-                    "AND " +
-                    "	it.Sequenza = 'Prima' " +
-                    "ORDER BY " +
-                    "	im.IDPratica, im.IstanzaMudeData";
+            String sql = "SELECT" +
+"                    	im.IstanzaMudeNr AS NumeroFascicoloMUDE, " +
+"                    	it.Ordinanza AS Ordinanza, " +
+"                    	imp.Numeroprotocollo AS NumeroProtocolloUSR, " +
+"                    	imp.dataProtocollo AS DataProtocolloUSR, " +
+"                    	im.IDPratica AS NumeroFascicoloUSR, " +
+"                    	ist.IntestatarioCF AS CFIntestatario, " +
+"                    	im.IntestatarioNomeCognome AS NomeCognomeIntestatario, " +
+"                    	ist.ProfessionistaCF AS CFProfessionistaCapogruppo, " +
+"                    	im.Professionista AS NomeCognomeProfessionistaCapogruppo, " +
+"                    	CASE com.Provincia " +
+"                    		WHEN 'AQ' THEN '066' " +
+"                    		WHEN 'CH' THEN '069' " +
+"                    		WHEN 'PE' THEN '068' " +
+"                    		ELSE '067' " +
+"                    	END AS CodiceIstatProvincia, " +
+"                    	com.Istat AS CodiceIstatComune, " +
+"                    	ist.UbicazioneEdificio AS Indirizzo, " +
+"                    	ist.Foglio AS Foglio, " +
+"                    	ist.Mappale AS MappaleTerreni, " +
+"                    	it.DestinazioneUso AS DestinazioneUsoPrevalente, " +
+"                    	lo.LivelloOperativo AS LivelloOperativo, " +
+"                    	ist.NumeroUnitaImmobiliare AS TotUI, " +
+"                    	ist.NumeroAbitazioniPrincipali AS TotUIPrincipaliOAttProdEse " +
+"                    FROM " +
+"                    	tbl_IstanzaMUDE im " +
+"                    LEFT JOIN " +
+"                    	(SELECT _im.IDPratica, MIN(_im.IstanzaMudeData) AS IstanzaMudeData FROM tbl_IstanzaMUDE _im GROUP BY _im.IDPratica) AS im2 ON (im.IDPratica = im2.IDPratica) AND (im.IstanzaMudeData = im2.IstanzaMudeData) " +
+"                    LEFT JOIN " +
+"			(SELECT min(IDIstanzaMUDE) AS IDIstanzaMUDE, min(Numeroprotocollo) AS Numeroprotocollo, min(dataProtocollo) AS dataProtocollo from tbl_IstanzaMUDEProtocolli group by IDIstanzaMUDE) AS imp ON im.IstanzaMudeNr = imp.IDIstanzaMUDE " +
+"                    LEFT JOIN " +
+"                    	cbo_IstanzaTipologia it ON im.SpeciePratica = it.IdSpeciePraticaIdSpeciePratica " +
+"                    LEFT JOIN " +
+"                    	MDMComuni com ON UPPER(im.IstanzaComune) = UPPER(com.Nome) " +
+"                    LEFT JOIN " +
+"                        tbl_Istanza ist ON im.IstanzaMudeNr = ist.IstanzaMudeNr " +
+"                    LEFT JOIN " +
+"                        cbo_LivelliOperativi lo ON lo.idLivelloOperativo = ist.IdLivelloOperativo" +
+"		     WHERE" +
+"                    	im.IDPratica > 0" +
+//"                    AND " +
+//"                    	(im.IstanzaMUDEDiriferimento IS NULL OR im.IstanzaMUDEDiriferimento = '') " +
+"                    AND " +
+"                    	it.Sequenza = 'Prima'" +
+"                    ORDER BY " +
+"                    	im.IDPratica, im.IstanzaMudeData";
                          
             List<Report> lRep = new ArrayList<>();
             try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {
