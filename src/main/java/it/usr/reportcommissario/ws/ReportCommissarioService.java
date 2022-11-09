@@ -92,8 +92,27 @@ public class ReportCommissarioService implements MessageListener {
             if(totalRecords==0) {
                 return;
             }*/
-                                   
-            String sql = "SELECT" +
+            
+            // svuota temporanea di lavori
+            int tot = 0;
+            String sql = "DELETE FROM tbl_istanzaMUDECommissario";
+            try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {
+                tot = ps.executeUpdate();            
+            }
+            // conferma
+            pigrecoCon.commit();
+            log("Eliminati da [tbl_istanzaMUDECommissario] "+tot+" record.");
+            
+            // ripopola
+            sql = "insert into tbl_IstanzaMUDECommissario select * from View_IstanzeCommissario";
+            try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {
+                tot = ps.executeUpdate();
+            }
+            // salva tutto
+            pigrecoCon.commit();
+            log("Inseriti in [tbl_istanzaMUDECommissario] da [View_IstanzeCommissario] "+tot+" record.");
+            
+            sql = "SELECT" +
 "                    	im.IstanzaMudeNr AS NumeroFascicoloMUDE, " +
 "                    	it.Ordinanza AS Ordinanza, " +
 "                    	imp.Numeroprotocollo AS NumeroProtocolloUSR, " +
@@ -118,7 +137,7 @@ public class ReportCommissarioService implements MessageListener {
 "                    	ist.NumeroUnitaImmobiliare AS TotUI, " +
 "                    	ist.NumeroAbitazioniPrincipali AS TotUIPrincipaliOAttProdEse " +
 "                    FROM " +
-"                    	tbl_IstanzaMUDE im " +
+"                    	tbl_istanzaMUDECommissario im " +
 "                    LEFT JOIN " +
 "                    	(SELECT _im.IDPratica, MIN(_im.IstanzaMudeData) AS IstanzaMudeData FROM tbl_IstanzaMUDE _im GROUP BY _im.IDPratica) AS im2 ON (im.IDPratica = im2.IDPratica) AND (im.IstanzaMudeData = im2.IstanzaMudeData) " +
 "                    LEFT JOIN " +
@@ -427,7 +446,7 @@ public class ReportCommissarioService implements MessageListener {
                         log("WARNING! IdPratica: "+idPratica+" not found in decreti!");
                         if(idPratica>=2144) {
                             r.setOrdinanza100(Boolean.TRUE);
-                            log("IdPratica: Ordinanza 100->true!");
+                            log("IdPratica "+idPratica+": Ordinanza 100->true!");
                         }
                     } 
                     
