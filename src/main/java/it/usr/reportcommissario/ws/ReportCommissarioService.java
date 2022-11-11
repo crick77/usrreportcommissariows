@@ -41,11 +41,12 @@ import javax.sql.DataSource;
 })
 @TransactionManagement(TransactionManagementType.BEAN)
 public class ReportCommissarioService implements MessageListener {
-    private final static int[] RIGETTO = { 11, 18 };
-    private final static int[] CONTRIBUTO = { 1 };
-    private final static int[] ORDINANZA_RIFERIMENTO = { 1, 3, 4, 37, 38, 39 };
-    private final static int BATCH_SIZE = 100;    
-    private final static double EPSILON = 0.00001;
+    //public final static int[] RIGETTO = { 11, 18 }; 
+    public final static int[] RIGETTO = { 11, 18, 20 }; // MODIFICA 11/11/2022 - VEDI SOTTO
+    public final static int[] CONTRIBUTO = { 1 };
+    public final static int[] ORDINANZA_RIFERIMENTO = { 1, 3, 4, 37, 38, 39 };
+    public final static int BATCH_SIZE = 100;    
+    public final static double EPSILON = 0.00001;
     @Resource(lookup = "jdbc/decreti")
     DataSource dsDecreti;
     @Resource(lookup = "jdbc/pigreco")
@@ -94,7 +95,7 @@ public class ReportCommissarioService implements MessageListener {
             }*/
             
             // svuota temporanea di lavori
-            int tot = 0;
+            int tot;
             String sql = "DELETE FROM tbl_istanzaMUDECommissario";
             try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {
                 tot = ps.executeUpdate();            
@@ -174,6 +175,7 @@ public class ReportCommissarioService implements MessageListener {
                         
                         lRep.add(r);
                         
+                        // Decommentare per effettuare prove più rapide
                         //if(lRep.size()==500) break;
                     } 
                 }
@@ -227,11 +229,14 @@ public class ReportCommissarioService implements MessageListener {
                     "AND " +
                     "  id_tipo_provvedimento > 0 " +
                     "AND " +
-                    "  id_tipo_decreto in (1,11,18) " +
+                    //"  id_tipo_decreto in (1,11,18) " +  
+                    "  id_tipo_decreto in (1,11,18,20) " +  // MODIFICA 11/11/2022 - VEDI SOTTO
                     "AND " +
                     "  id_pratica IS NOT NULL AND id_pratica > 0 "+
                     "ORDER BY " +
-                    "  id_pratica ASC, data_atto DESC";
+                    //"  id_pratica ASC, data_atto DESC";
+                    "  id_pratica ASC, data_atto ASC";     // MODIFICA 11/11/2022 - VEDI SOTTO
+            
             Map<Integer, List<Decreto>> decreti = new HashMap<>();
             try(PreparedStatement ps = decretiCon.prepareStatement(sql)) {
                 try(ResultSet rs = ps.executeQuery()) {
@@ -320,14 +325,20 @@ public class ReportCommissarioService implements MessageListener {
                 
                 int rowCount = 0;
                 for(Report r : lRep) {
-                    int idPratica = new Integer(r.getNumeroFascicoloUSR());
+                    int idPratica = Integer.parseInt(r.getNumeroFascicoloUSR());
                     List<Decreto> lD = decreti.get(idPratica);
-                    if(lD!=null) {
-                        Decreto d = lD.get(0);
+                    if(lD!=null && !lD.isEmpty()) {
+                        /**
+                         * 
+                         * MODIFICA DEL 11/11/2022 PER ALLINEARE I VALORI DI CONTRIBUTO/REVOCA AL REPORT COMPLESSIVO PER IL COMMISSARIO (inviato da LUCA).                         
+                         * 
+                         */
+                        
+                        /*Decreto d = lD.get(0);
                         if(isOrdinanzaRiferimento(d.getIdOrdinanzaRiferimento())) {
                             if(isContributo(d.getIdTipoDecreto())) {
                                 int idx = 0;
-                                while(idx<lD.size() && lD.get(idx).getIdTipoDecreto()==d.getIdTipoDecreto() ) idx++;
+                                while(idx<lD.size() && lD.get(idx).getIdTipoDecreto()==d.getIdTipoDecreto() ) idx++; // forse va invertita partendo dall'ultimo e arrivando al primo
 
                                 Decreto dContrib = lD.get(idx-1);
                                 r.setDataDecretoContributo(dContrib.getDataOraProvvedimento());
@@ -339,9 +350,36 @@ public class ReportCommissarioService implements MessageListener {
                                     r.setDataRigettoArchiviazione(d.getDataOraProvvedimento());
                                 }
                             }
+                        }*/
+                        
+                        // Cerco un contributo (il più vecchio che trovo)
+                        boolean praticaAContributo = false;
+                        for(Decreto d : lD) {
+                            if(isOrdinanzaRiferimento(d.getIdOrdinanzaRiferimento()) && isContributo(d.getIdTipoDecreto())) {
+                                r.setDataDecretoContributo(d.getDataOraProvvedimento());
+                                r.setNumeroDecretoContributo(String.valueOf(d.getNumeroProvvedimento()));
+                                r.setCUP(d.getCup());
+                                r.setOrdinanza100(d.isOrd100());
+                                
+                                praticaAContributo = true;
+                                break;
+                            }
+                        }
+                        
+                        // Nessun contributo? 
+                        // Allora cerca un rigetto, archiviazione o revoca (il più vecchio che trovo)
+                        if(!praticaAContributo) {
+                            for(Decreto d : lD) {
+                                if(isOrdinanzaRiferimento(d.getIdOrdinanzaRiferimento()) && isRigetto(d.getIdTipoDecreto())) {
+                                    r.setDataRigettoArchiviazione(d.getDataOraProvvedimento());
+                                    r.setOrdinanza100(d.isOrd100());
+                                    
+                                    break;
+                                }
+                            }
                         }
 
-                        r.setOrdinanza100(d.isOrd100());                                     
+                        // Imposta verifica da estrazioni
                         r.setSorteggiataPerVerificaACampione(estrazioni.get(idPratica)!=null);                        
                         
                         psAnticipazioneSal0Finale.clearParameters();
