@@ -305,6 +305,8 @@ public class ReportCommissarioService implements MessageListener {
                     "    SELECT TOP 1 im.IstanzaMudeData, 'SAL20' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI152', 'SPE00CI168') ORDER BY im.IstanzaMudeData" +
                     "  UNION ALL " +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'SAL50' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI128') ORDER BY im.IstanzaMudeData" +
+                    "  UNION ALL " +
+                    "    SELECT TOP 1 im.IstanzaMudeData, 'SAL0' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI127', 'SPE00CI151', 'SPE00CI167') ORDER BY im.IstanzaMudeData" +
                     ") AS t";
             String dataProvvedimentiSql = "SELECT data_ora_provvedimento, numero_provvedimento FROM decreti WHERE id_ordinanza_riferimento in (3,4,38,39) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ? ORDER BY data_ora_provvedimento DESC";
             String dataProvvedimento50Sql = "SELECT data_ora_provvedimento, numero_provvedimento from decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ?";
@@ -413,7 +415,7 @@ public class ReportCommissarioService implements MessageListener {
                         }
                          
                         psDataPresentazione.clearParameters();
-                        for(int i=0;i<5;i++) psDataPresentazione.setInt(i+1, idPratica);
+                        for(int i=0;i<6;i++) psDataPresentazione.setInt(i+1, idPratica);
                         try(ResultSet rs = psDataPresentazione.executeQuery()) {
                             while(rs.next()) {
                                 switch(rs.getString("tipo")) {
@@ -435,6 +437,10 @@ public class ReportCommissarioService implements MessageListener {
                                     }
                                     case "SAL50": {
                                         r.setDataPresentazioneSAL50(rs.getDate("IstanzaMudeData"));
+                                        break;
+                                    }
+                                    case "SAL0": {
+                                        r.setDataPresentazioneSAL0(rs.getDate("IstanzaMudeData"));
                                         break;
                                     }
                                 }                                
