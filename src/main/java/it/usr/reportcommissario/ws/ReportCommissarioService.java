@@ -135,8 +135,8 @@ public class ReportCommissarioService implements MessageListener {
 "                    	ist.Mappale AS MappaleTerreni, " +
 "                    	it.DestinazioneUso AS DestinazioneUsoPrevalente, " +
 "                    	lo.LivelloOperativo AS LivelloOperativo, " +
-"                    	ist.NumeroUnitaImmobiliare AS TotUI, " +
-"                    	ist.NumeroAbitazioniPrincipali AS TotUIPrincipaliOAttProdEse " +
+"                    	NULLIF(ist.NumeroUnitaImmobiliare, '') AS TotUI, " +
+"                    	NULLIF(ist.NumeroAbitazioniPrincipali, '') AS TotUIPrincipaliOAttProdEse " +
 "                    FROM " +
 "                    	tbl_istanzaMUDECommissario im " +
 "                    LEFT JOIN " +
