@@ -155,8 +155,9 @@ public class ReportCommissarioService implements MessageListener {
 "                    	im.IDPratica > 0" +
 //"                    AND " +
 //"                    	(im.IstanzaMUDEDiriferimento IS NULL OR im.IstanzaMUDEDiriferimento = '') " +
-"                    AND " +
-"                    	it.Sequenza = 'Prima'" +
+                    // MODIFICA DEL 26/01/2024 (non tutti i progetti hanno questa indicazione - non ne estrae ca 50
+//"                    AND " +
+//"                    	it.Sequenza = 'Prima'" +
 "                    ORDER BY " +
 "                    	im.IDPratica, im.IstanzaMudeData";
                          
@@ -288,13 +289,14 @@ public class ReportCommissarioService implements MessageListener {
             }
             log("Contributi loaded: "+contributi.size()+" unique records found.");
             
-            String anticipazioneSal0FinaleSql = "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'ANTIC' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (15) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) "
+            // MODIFICA 26/01/2024 - Carmenzo - aggiunti 26 alla prima e 24 all'ultima union nella IN di tipo_decreto
+            String anticipazioneSal0FinaleSql = "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'ANTIC' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (15) AND id_tipo_decreto IN (2,26) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) "
                     + "UNION "
                     + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'SAL0' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,3,4,37,38,39) AND id_tipo_decreto IN (21) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) "
                     + "UNION "
                     + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'FINALE' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,3,4,37,38,39) AND id_tipo_decreto IN (19) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1) " 
                     + "UNION "
-                    + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'LIEVI50' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1)";
+                    + "(SELECT data_ora_provvedimento, numero_provvedimento, importo_contributo, 'LIEVI50' AS tipo FROM decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2,24) AND da_rendicontare = 1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento > 0 AND id_pratica = ? LIMIT 1)";
             String dataPresentazioneSql =   "SELECT * FROM (" +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'FINALE' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI129', 'SPE00CI130', 'SPE00CI155', 'SPE00CI156', 'SPE00CI171', 'SPE00CI172', 'SPE00CI180') ORDER BY im.IstanzaMudeData" +
                     "  UNION ALL " +
@@ -308,8 +310,10 @@ public class ReportCommissarioService implements MessageListener {
                     "  UNION ALL " +
                     "    SELECT TOP 1 im.IstanzaMudeData, 'SAL0' AS tipo FROM tbl_IstanzaMUDE im WHERE im.IDPratica = ? AND im.SpeciePratica IN ('SPE00CI127', 'SPE00CI151', 'SPE00CI167') ORDER BY im.IstanzaMudeData" +
                     ") AS t";
-            String dataProvvedimentiSql = "SELECT data_ora_provvedimento, numero_provvedimento FROM decreti WHERE id_ordinanza_riferimento in (3,4,38,39) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ? ORDER BY data_ora_provvedimento DESC";
-            String dataProvvedimento50Sql = "SELECT data_ora_provvedimento, numero_provvedimento from decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ?";
+            // MODIFICA 26/01/2024 - Carmenzo - aggiunti 22,23,25 alla IN di tipo_decreto
+            String dataProvvedimentiSql = "SELECT data_ora_provvedimento, numero_provvedimento FROM decreti WHERE id_ordinanza_riferimento in (3,4,38,39) AND id_tipo_decreto IN (2,22,23,25) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ? ORDER BY data_ora_provvedimento DESC";
+            // MODIFICA 26/01/2024 - Carmenzo - aggiunti 24 alla IN di tipo_decreto
+            String dataProvvedimento50Sql = "SELECT data_ora_provvedimento, numero_provvedimento from decreti WHERE id_ordinanza_riferimento IN (1,37) AND id_tipo_decreto IN (2,24) AND da_rendicontare=1 AND numero_provvedimento IS NOT NULL AND id_tipo_provvedimento>0 AND id_pratica = ?";
             String reportCommissarioSql = "INSERT INTO reportcommissario (numerofascicolomude, ordinanza, ordinanza100, sorteggiatoperverificaacampione, numeroprotocollousr, dataprotocollousr, numerofascicolousr, cfintestatario, nomecognomeintestatario, titolaritagiuridicarichiedente, cfprofessionistacapogruppo, "
                     + "nomecognomeprofessionistacapogruppo, cfopivaimpresaaffidataria, ragionesocialeimpresaaffidataria, codiceistatprovincia, codiceistatcomune, indirizzo, foglio, mappaleterreni, destinazioneusoprevalente, livellooperativo, tipologiaintervento, interventoaggregato, totustrutturali, "
                     + "totui, totuiprincipalioattprodese, istanzarigettataarchiviata, datarigettoarchiviazione, numerodecretocontributo, datadecretocontributo, cup, datapresentazioneanticipazionespesetecniche, numerodecretoanticipazionespesetecniche, datadecretoanticipazionespesetecniche, "
