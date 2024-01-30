@@ -582,7 +582,12 @@ public class ReportCommissarioService implements MessageListener {
         try {
             int i = 1;
             psReportCommissario.setString(i++, r.getNumeroFascicoloMUDE());
-            psReportCommissario.setInt(i++, r.getOrdinanza());
+            if(r.getOrdinanza()!=null) {
+                psReportCommissario.setInt(i++, r.getOrdinanza());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.INTEGER);
+            }
             psReportCommissario.setString(i++, boolToStr(r.getOrdinanza100()));
             psReportCommissario.setString(i++, boolToStr(r.getSorteggiataPerVerificaACampione()));
             psReportCommissario.setString(i++, r.getNumeroProtocolloUSR());
