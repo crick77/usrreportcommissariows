@@ -579,108 +579,117 @@ public class ReportCommissarioService implements MessageListener {
     }
 
     private void batchInsert(PreparedStatement psReportCommissario, Report r) throws SQLException {
-        int i = 1;
-        psReportCommissario.setString(i++, r.getNumeroFascicoloMUDE());
-        psReportCommissario.setInt(i++, r.getOrdinanza());
-        psReportCommissario.setString(i++, boolToStr(r.getOrdinanza100()));
-        psReportCommissario.setString(i++, boolToStr(r.getSorteggiataPerVerificaACampione()));
-        psReportCommissario.setString(i++, r.getNumeroProtocolloUSR());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataProtocolloUSR()));
-        psReportCommissario.setString(i++, r.getNumeroFascicoloUSR());
-        psReportCommissario.setString(i++, r.getCFIntestatario());
-        psReportCommissario.setString(i++, r.getNomeCognomeIntestatario());
-        psReportCommissario.setString(i++, r.getTitolaritaGiuridicaRichiedente());
-        
-        psReportCommissario.setString(i++, r.getCFProfessionistaCapogruppo());
-        psReportCommissario.setString(i++, r.getNomeCognomeProfessionistaCapogruppo());
-        psReportCommissario.setString(i++, r.getCFoPivaImpresaAffidataria());
-        psReportCommissario.setString(i++, r.getRagioneSocialeImpresaAffidataria());
-        psReportCommissario.setString(i++, r.getCodiceIstatProvincia());
-        psReportCommissario.setString(i++, r.getCodiceIstatComune());
-        psReportCommissario.setString(i++, r.getIndirizzo());
-        if(r.getFoglio()!=null) {
-            psReportCommissario.setInt(i++, r.getFoglio());
+        try {
+            int i = 1;
+            psReportCommissario.setString(i++, r.getNumeroFascicoloMUDE());
+            psReportCommissario.setInt(i++, r.getOrdinanza());
+            psReportCommissario.setString(i++, boolToStr(r.getOrdinanza100()));
+            psReportCommissario.setString(i++, boolToStr(r.getSorteggiataPerVerificaACampione()));
+            psReportCommissario.setString(i++, r.getNumeroProtocolloUSR());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataProtocolloUSR()));
+            psReportCommissario.setString(i++, r.getNumeroFascicoloUSR());
+            psReportCommissario.setString(i++, r.getCFIntestatario());
+            psReportCommissario.setString(i++, r.getNomeCognomeIntestatario());
+            psReportCommissario.setString(i++, r.getTitolaritaGiuridicaRichiedente());
+
+            psReportCommissario.setString(i++, r.getCFProfessionistaCapogruppo());
+            psReportCommissario.setString(i++, r.getNomeCognomeProfessionistaCapogruppo());
+            psReportCommissario.setString(i++, r.getCFoPivaImpresaAffidataria());
+            psReportCommissario.setString(i++, r.getRagioneSocialeImpresaAffidataria());
+            psReportCommissario.setString(i++, r.getCodiceIstatProvincia());
+            psReportCommissario.setString(i++, r.getCodiceIstatComune());
+            psReportCommissario.setString(i++, r.getIndirizzo());
+            if(r.getFoglio()!=null) {
+                psReportCommissario.setInt(i++, r.getFoglio());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.INTEGER);
+            }
+            psReportCommissario.setString(i++, r.getMappaleTerreni());
+            psReportCommissario.setString(i++, r.getDestinazioneUsoPrevalente());        
+            psReportCommissario.setString(i++, r.getLivelloOperativo());
+            psReportCommissario.setString(i++, r.getTipologiaIntervento());
+            psReportCommissario.setString(i++, boolToStr(r.getInterventoAggregato()));        
+            if(r.getTotUStrutturali()!=null) {
+                psReportCommissario.setInt(i++, r.getTotUStrutturali());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.INTEGER);
+            }
+            if(r.getTotUI()!=null) {
+                psReportCommissario.setInt(i++, r.getTotUI());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.INTEGER);
+            }
+            if(r.getTotUIPrincipaliOAttProdEse()!=null) {
+                psReportCommissario.setInt(i++, r.getTotUIPrincipaliOAttProdEse());                
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.INTEGER);
+            }
+            psReportCommissario.setString(i++, boolToStr(r.getIstanzaRigettataArchiviata()));
+            psReportCommissario.setDate(i++, dateToSql(r.getDataRigettoArchiviazione()));        
+            psReportCommissario.setString(i++, r.getNumeroDecretoContributo());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoContributo()));       
+            psReportCommissario.setString(i++, r.getCUP());
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneAnticipazioneSpeseTecniche()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoAnticipazioneSpeseTecniche());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoAnticipazioneSpeseTecniche()));        
+            if(r.getImportoAnticipazioneSpeseTecniche()!=null) {
+                psReportCommissario.setBigDecimal(i++, r.getImportoAnticipazioneSpeseTecniche());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.DECIMAL);
+            }
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL0()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSAL0());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL0()));
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL20()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSAL20());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL20()));
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL40()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSAL40());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL40()));
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL50()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSAL50());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL50()));
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL70()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSAL70());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL70()));
+
+            psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSALfinale()));
+            psReportCommissario.setString(i++, r.getNumeroDecretoSALfinale());
+            psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSALfinale()));
+
+            if(r.getContributoConcesso()!=null) {
+                psReportCommissario.setBigDecimal(i++, r.getContributoConcesso());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.DECIMAL);
+            }
+            if(r.getContributoLiquidato()!=null) {
+                psReportCommissario.setBigDecimal(i++, r.getContributoLiquidato());
+            }
+            else {
+                psReportCommissario.setNull(i++, Types.DECIMAL);
+            }
+
+            psReportCommissario.addBatch();
         }
-        else {
-            psReportCommissario.setNull(i++, Types.INTEGER);
+        catch(SQLException sqle) {
+            throw sqle;
         }
-        psReportCommissario.setString(i++, r.getMappaleTerreni());
-        psReportCommissario.setString(i++, r.getDestinazioneUsoPrevalente());        
-        psReportCommissario.setString(i++, r.getLivelloOperativo());
-        psReportCommissario.setString(i++, r.getTipologiaIntervento());
-        psReportCommissario.setString(i++, boolToStr(r.getInterventoAggregato()));        
-        if(r.getTotUStrutturali()!=null) {
-            psReportCommissario.setInt(i++, r.getTotUStrutturali());
+        catch(Exception e) {
+            System.out.println("Errore inserimento pratica ID=["+r.getNumeroFascicoloUSR()+"] MUDE=["+r.getNumeroFascicoloMUDE()+"] a causa di: "+e);
+            throw e;
         }
-        else {
-            psReportCommissario.setNull(i++, Types.INTEGER);
-        }
-        if(r.getTotUI()!=null) {
-            psReportCommissario.setInt(i++, r.getTotUI());
-        }
-        else {
-            psReportCommissario.setNull(i++, Types.INTEGER);
-        }
-        if(r.getTotUIPrincipaliOAttProdEse()!=null) {
-            psReportCommissario.setInt(i++, r.getTotUIPrincipaliOAttProdEse());                
-        }
-        else {
-            psReportCommissario.setNull(i++, Types.INTEGER);
-        }
-        psReportCommissario.setString(i++, boolToStr(r.getIstanzaRigettataArchiviata()));
-        psReportCommissario.setDate(i++, dateToSql(r.getDataRigettoArchiviazione()));        
-        psReportCommissario.setString(i++, r.getNumeroDecretoContributo());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoContributo()));       
-        psReportCommissario.setString(i++, r.getCUP());
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneAnticipazioneSpeseTecniche()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoAnticipazioneSpeseTecniche());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoAnticipazioneSpeseTecniche()));        
-        if(r.getImportoAnticipazioneSpeseTecniche()!=null) {
-            psReportCommissario.setBigDecimal(i++, r.getImportoAnticipazioneSpeseTecniche());
-        }
-        else {
-            psReportCommissario.setNull(i++, Types.DECIMAL);
-        }
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL0()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSAL0());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL0()));
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL20()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSAL20());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL20()));
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL40()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSAL40());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL40()));
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL50()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSAL50());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL50()));
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSAL70()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSAL70());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSAL70()));
-        
-        psReportCommissario.setDate(i++, dateToSql(r.getDataPresentazioneSALfinale()));
-        psReportCommissario.setString(i++, r.getNumeroDecretoSALfinale());
-        psReportCommissario.setDate(i++, dateToSql(r.getDataDecretoSALfinale()));
-        
-        if(r.getContributoConcesso()!=null) {
-            psReportCommissario.setBigDecimal(i++, r.getContributoConcesso());
-        }
-        else {
-            psReportCommissario.setNull(i++, Types.DECIMAL);
-        }
-        if(r.getContributoLiquidato()!=null) {
-            psReportCommissario.setBigDecimal(i++, r.getContributoLiquidato());
-        }
-        else {
-            psReportCommissario.setNull(i++, Types.DECIMAL);
-        }
-        
-        psReportCommissario.addBatch();
     }
     
     private String boolToStr(Boolean b) {
