@@ -85,8 +85,8 @@ public class Report {
     private String indirizzo;
     
     @CsvBindByPosition(position = 17)
-    @Transform(transformer = IntegerTransformer.class)
-    private Integer foglio;
+    //@Transform(transformer = IntegerTransformer.class) (was Integer)
+    private String foglio;
     
     @CsvBindByPosition(position = 18)
     private String mappaleTerreni;
@@ -375,11 +375,11 @@ public class Report {
         this.indirizzo = indirizzo;
     }
 
-    public Integer getFoglio() {
+    public String getFoglio() {
         return foglio;
     }
 
-    public void setFoglio(Integer foglio) {
+    public void setFoglio(String foglio) {
         this.foglio = foglio;
     }
 

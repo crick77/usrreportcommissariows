@@ -605,10 +605,10 @@ public class ReportCommissarioService implements MessageListener {
             psReportCommissario.setString(i++, r.getCodiceIstatComune());
             psReportCommissario.setString(i++, r.getIndirizzo());
             if(r.getFoglio()!=null) {
-                psReportCommissario.setInt(i++, r.getFoglio());
+                psReportCommissario.setString(i++, r.getFoglio());
             }
             else {
-                psReportCommissario.setNull(i++, Types.INTEGER);
+                psReportCommissario.setNull(i++, Types.VARCHAR);
             }
             psReportCommissario.setString(i++, r.getMappaleTerreni());
             psReportCommissario.setString(i++, r.getDestinazioneUsoPrevalente());        

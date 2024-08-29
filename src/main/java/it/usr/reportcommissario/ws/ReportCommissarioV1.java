@@ -212,7 +212,7 @@ public class ReportCommissarioV1 {
                         r.setCodiceIstatProvincia(rsRep.getString(idx++));
                         r.setCodiceIstatComune(rsRep.getString(idx++));
                         r.setIndirizzo(rsRep.getString(idx++));
-                        r.setFoglio(rsRep.getObject(idx++, Integer.class));
+                        r.setFoglio(rsRep.getObject(idx++, String.class));
                         r.setMappaleTerreni(rsRep.getString(idx++));
                         r.setDestinazioneUsoPrevalente(rsRep.getString(idx++));
                         r.setLivelloOperativo(rsRep.getString(idx++));
