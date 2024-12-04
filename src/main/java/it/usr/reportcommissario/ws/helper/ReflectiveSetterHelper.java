@@ -80,7 +80,7 @@ public class ReflectiveSetterHelper<T> {
             }
         } 
         catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException("Cannot set value for setter ["+fieldName+"] of type ["+type+"] because of "+ex, ex);
+            throw new RuntimeException("Cannot set value for setter ["+fieldName+"] of type ["+type+"] with value ["+value+"] because of "+ex, ex);
         }        
     }
 }

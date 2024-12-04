@@ -53,7 +53,8 @@ public class ReportCommissarioService implements MessageListener {
     DataSource dsPigreco;  
     
     @Override
-    public void onMessage(Message msg) {          
+    public void onMessage(Message msg) {    
+        String rowNum = null;
         try(Connection pigrecoCon = dsPigreco.getConnection();
             Connection decretiCon = dsDecreti.getConnection()) {
             
@@ -162,12 +163,13 @@ public class ReportCommissarioService implements MessageListener {
 "                    	im.IDPratica, im.IstanzaMudeData";
                          
             List<Report> lRep = new ArrayList<>();
-            try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {
+            try(PreparedStatement ps = pigrecoCon.prepareStatement(sql)) {                
                 try(ResultSet rs = ps.executeQuery()) {
                     ResultSetMetaData rsMD = rs.getMetaData();
                     ReflectiveSetterHelper<Report> rse = new ReflectiveSetterHelper<>(Report.class);
                     
                     while(rs.next()) {
+                        rowNum = rs.getString("NumeroFascicoloUSR");
                         Report r = new Report();
                         
                         for(int i=1;i<=rsMD.getColumnCount();i++) {
@@ -557,7 +559,7 @@ public class ReportCommissarioService implements MessageListener {
                 PreparedStatement psReportCommissarioWork = decretiCon.prepareStatement(reportoCommissarioWorkSql)) {
                 psReportCommissarioWork.setInt(1, 0);
                 psReportCommissarioWork.setInt(2, 1);
-                psReportCommissarioWork.setString(3, e.toString());
+                psReportCommissarioWork.setString(3, "#"+rowNum+":"+e.toString());
                 psReportCommissarioWork.executeUpdate();
             }
             catch(Exception ex) {
