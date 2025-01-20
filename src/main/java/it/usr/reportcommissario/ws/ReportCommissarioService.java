@@ -45,15 +45,23 @@ public class ReportCommissarioService implements MessageListener {
     public final static int[] RIGETTO = { 11, 18, 20 }; // MODIFICA 11/11/2022 - VEDI SOTTO
     public final static int[] CONTRIBUTO = { 1 };
     public final static int[] ORDINANZA_RIFERIMENTO = { 1, 3, 4, 37, 38, 39 };
-    public final static int BATCH_SIZE = 100;    
+    public final static int DEFAULT_BATCH_SIZE = 100;    
     public final static double EPSILON = 0.00001;
     @Resource(lookup = "jdbc/decreti")
     DataSource dsDecreti;
     @Resource(lookup = "jdbc/pigreco")
     DataSource dsPigreco;  
+    @Resource(lookup = "usrreportcommissario/batchSize")
+    Integer batchSize;
     
     @Override
-    public void onMessage(Message msg) {    
+    public void onMessage(Message msg) { 
+        if(batchSize == null) {
+            batchSize = DEFAULT_BATCH_SIZE;
+            System.out.println("reportcommissariows batchSize was empty. Using default of: "+DEFAULT_BATCH_SIZE);
+        }
+        System.out.println("reportcommissariows batchSize: "+batchSize);
+        
         String rowNum = null;
         try(Connection pigrecoCon = dsPigreco.getConnection();
             Connection decretiCon = dsDecreti.getConnection()) {
@@ -521,7 +529,7 @@ public class ReportCommissarioService implements MessageListener {
                     
                     batchInsert(psReportCommissario, r);
                     rowCount++;
-                    if((rowCount % BATCH_SIZE)==0) {
+                    if((rowCount % batchSize)==0) {
                         psReportCommissario.executeBatch();                        
                         
                         psReportCommissarioWork.clearParameters();
