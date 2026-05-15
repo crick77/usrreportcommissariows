@@ -49,6 +49,8 @@ public class ReportCommissarioService implements MessageListener {
     public final static double EPSILON = 0.00001;
     @Resource(lookup = "jdbc/decreti")
     DataSource dsDecreti;
+    @Resource(lookup = "jdbc/usrestrazioni")
+    DataSource dsEstrazioni;
     @Resource(lookup = "jdbc/pigreco")
     DataSource dsPigreco;  
     @Resource(lookup = "usrreportcommissario/batchSize")
@@ -64,7 +66,8 @@ public class ReportCommissarioService implements MessageListener {
         
         String rowNum = null;
         try(Connection pigrecoCon = dsPigreco.getConnection();
-            Connection decretiCon = dsDecreti.getConnection()) {
+            Connection decretiCon = dsDecreti.getConnection();
+            Connection estrazioniCon = dsEstrazioni.getConnection()) {
             
             decretiCon.setAutoCommit(false);
                                                                         
@@ -211,7 +214,7 @@ public class ReportCommissarioService implements MessageListener {
             
             sql = "SELECT idpratica FROM usrestrazioni.pratica";
             Map<Integer, Integer> estrazioni = new HashMap<>();            
-            try(PreparedStatement ps = decretiCon.prepareStatement(sql)) {
+            try(PreparedStatement ps = estrazioniCon.prepareStatement(sql)) {
                 try(ResultSet rs = ps.executeQuery()) {
                     while(rs.next()) {
                         int idPratica = rs.getInt(1);
